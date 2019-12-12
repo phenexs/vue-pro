@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./js/vue.js"></script>
+    <script src="js/vue-router_3.0.2.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <router-link to="/user/1">User1</router-link>
+        <router-link to="/user/2">User2</router-link>
+        <router-link :to="{ name: 'user', params: {id: 3}}">User3</router-link>
+        <router-link to="/user/4">User4</router-link>
+        <router-link to="/register">Register</router-link>
+
+        <router-view></router-view>
+    </div>
+
+    <script>
+        const User = {
+            props: ['id', 'uname', 'age'],//接收参数
+            template: `
+            <div>
+                <h1>User组件--用户id为：{{id}}--用户uname为：{{uname}}--用户age为：{{age}}</h1>
+                <button @click="goRegister">跳转到注册页面</button>
+            </div>
+            `,
+            methods:{
+                goRegister:function(){
+                    this.$router.push('/register');
+                }
+            }
+        }
+        const Register = {
+            template: `
+                <div>
+                    <h1>Register组件</h1>
+                    <button @click="goBack">回到user页面</button>
+                </div>
+            `,
+            methods:{
+                goBack:function(){
+                    this.$router.go(-1);
+                }
+            }
+        }
+        const router = new VueRouter({
+            routes: [
+                {
+                    name:'user',
+                    path: '/user/:id', 
+                    component: User, 
+                    props: route => ({ uname: 'zs', age: 20, id: route.params.id})
+                },//开启props传参
+                { path: '/register', component: Register }
+            ]
+        })
+        const vm = new Vue({
+            el: '#app',
+            data: {},
+            methods: {},
+            router
+        });
+    </script>
+</body>
+
+</html>
